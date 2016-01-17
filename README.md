@@ -11,5 +11,5 @@ Control a dom element position(x,y) and size(z).
 
 ###Demo
 <p align="center">
-  <img src="link" alt="demo"/>
+  <img src="https://raw.githubusercontent.com/tonycatapano/hello-leap-motion/master/demo.gif" alt="demo"/>
 </p>
