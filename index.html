@@ -1,0 +1,56 @@
+<html>
+    <head>
+    <title>Hello Leap Motion Controller</title>
+        <script src="//js.leapmotion.com/leap-0.4.3.js"></script>
+        <style>
+            #logo {
+                position: absolute;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Hello Leap Motion Controller</h1>
+        <img id="logo" src="sytac.svg"></img>
+        <script>
+            var controller = new Leap.Controller();
+            var logo = document.getElementById('logo');
+            var leap_left, leap_right, leap_top, leap_bottom;
+
+
+            function set_leap_ranges(frame) {
+                var ib = frame.interactionBox;
+                leap_left = -ib.width;
+                leap_right = ib.width;
+                leap_top = ib.height * 2;
+                leap_bottom = 0;
+            }
+
+            controller.on('frame', function (frame) {
+                //checks
+                if (!frame || !frame.valid) {return;}
+                if (!leap_left) set_leap_ranges(frame);
+                if (!frame.pointables.length) return;
+                //get the first fingertip
+                var pointable = frame.pointables[0];
+                var tip = pointable.stabilizedTipPosition;
+                //width
+                var percent_width = tip[0] - leap_left;
+                percent_width /= (leap_right - leap_left);
+                var left = percent_width * window.innerWidth;
+                //height
+                var percent_height = tip[1] - leap_top;
+                percent_height /= (leap_top - leap_bottom);
+                var top = Math.abs(percent_height) * window.innerHeight;
+                var size = logo.style.height;
+                //depth
+                var leap_size = tip[2] + 300;
+                //apply
+                logo.style.left = left + 'px';
+                logo.style.top = top + 'px';
+                logo.style.height = leap_size + 'px';
+                logo.style.width  = leap_size + 'px';
+            });
+            controller.connect();
+        </script>
+    </body>
+</html>
